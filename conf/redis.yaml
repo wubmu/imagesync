@@ -1,0 +1,12 @@
+# redis
+docker.io/redis:8,8-alpine:
+- registry.cn-guangzhou.aliyuncs.com/ypub/redis
+docker.io/redis:7,7-alpine:
+- registry.cn-guangzhou.aliyuncs.com/ypub/redis
+docker.io/redis:6,6-alpine:
+- registry.cn-guangzhou.aliyuncs.com/ypub/redis
+
+
+# redisinsight
+docker.io/redis/redisinsight:latest:
+- registry.cn-guangzhou.aliyuncs.com/ypub/redis-redisinsight

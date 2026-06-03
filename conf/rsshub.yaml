@@ -1,0 +1,3 @@
+# rsshub
+docker.io/diygod/rsshub:latest,chromium-bundled:
+- registry.cn-guangzhou.aliyuncs.com/ypub/diygod-rsshub

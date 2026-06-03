@@ -1,0 +1,63 @@
+# quay.io/coreos/kube-rbac-proxy: quay.io/ruohe/kube-rbac-proxy
+# quay.io/coreos/kube-rbac-proxy:v1.0: quay.io/ruohe/kube-rbac-proxy
+# quay.io/coreos/kube-rbac-proxy:v1.0,v2.0: quay.io/ruohe/kube-rbac-proxy
+# quay.io/coreos/kube-rbac-proxy@sha256:14b267eb38aa85fd12d0e168fffa2d8a6187ac53a14a0212b0d4fce8d729598c: quay.io/ruohe/kube-rbac-proxy
+# quay.io/coreos/kube-rbac-proxy:v1.1:
+#   - quay.io/ruohe/kube-rbac-proxy1
+#   - quay.io/ruohe/kube-rbac-proxy2
+# quay.io/coreos/kube-rbac-proxy:/a+/: quay.io/ruohe/kube-rbac-proxy
+
+# memos
+docker.io/neosmemo/memos:stable:
+  - registry.cn-guangzhou.aliyuncs.com/ypub/neosmemo-memos
+
+# ttrss
+docker.io/wangqiru/ttrss:latest-2024-05-02:
+  - registry.cn-guangzhou.aliyuncs.com/ypub/wangqiru-ttrss
+
+# bitwarden
+docker.io/vaultwarden/server:latest:
+  - registry.cn-guangzhou.aliyuncs.com/ypub/vaultwarden-server
+
+# alist
+docker.io/xhofe/alist:v3.34.0-ffmpeg:
+  - registry.cn-guangzhou.aliyuncs.com/ypub/xhofe-alist
+
+# excalidraw
+docker.io/excalidraw/excalidraw:latest:
+  - registry.cn-guangzhou.aliyuncs.com/ypub/excalidraw-excalidraw
+
+# misskey
+docker.io/misskey/misskey:2024.3:
+  - registry.cn-guangzhou.aliyuncs.com/ypub/misskey-misskey
+
+# reference
+docker.io/wcjiang/reference:latest:
+  - registry.cn-guangzhou.aliyuncs.com/ypub/wcjiang-reference
+
+# linux-command
+docker.io/wcjiang/linux-command:latest:
+  - registry.cn-guangzhou.aliyuncs.com/ypub/wcjiang-linux-command
+
+# it-tools
+docker.io/corentinth/it-tools:nightly:
+  - registry.cn-guangzhou.aliyuncs.com/ypub/corentinth-it-tools
+
+# whoami
+docker.io/traefik/whoami:latest:
+  - registry.cn-guangzhou.aliyuncs.com/ypub/traefik-whoami
+
+# miniflux
+docker.io/miniflux/miniflux:latest:
+  - registry.cn-guangzhou.aliyuncs.com/ypub/miniflux-miniflux
+
+# glances
+docker.io/nicolargo/glances:latest-full:
+  - registry.cn-guangzhou.aliyuncs.com/ypub/nicolargo-glances
+
+# syncthing
+docker.io/syncthing/syncthing:latest:
+  - registry.cn-guangzhou.aliyuncs.com/ypub/syncthing-syncthing
+
+docker.io/wernight/dante:latest:
+  - registry.cn-guangzhou.aliyuncs.com/ypub/wernight-dante

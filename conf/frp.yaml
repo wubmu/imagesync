@@ -1,0 +1,5 @@
+snowdreamtech/frps:latest,bookworm,debian,alpine:
+- registry.cn-guangzhou.aliyuncs.com/ypub/snowdreamtech_frps
+
+snowdreamtech/frpc:latest,bookworm,debian,alpine:
+- registry.cn-guangzhou.aliyuncs.com/ypub/snowdreamtech_frpc

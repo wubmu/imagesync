@@ -1,0 +1,67 @@
+---
+name: image-mirror-schedule
+
+on:
+  schedule:
+  - cron: '15 */3 * * *' # 每3小时运行
+  # - cron: '0 */6 * * *' # 每6小时运行
+  # - cron: '15 */4 * * *' # 每4小时运行
+
+  workflow_dispatch: # 支持手动触发
+
+jobs:
+  setup:
+    runs-on: ubuntu-latest
+    outputs:
+      matrixList: ${{ steps.get-matrix.outputs.matrixList }}
+      matrixEnable: ${{ steps.get-matrix.outputs.matrixEnable }}
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+    - name: Calculate which config files to process this round
+      id: get-matrix
+      env:
+        SYNC_MOD: 8  # 取模值，配合 cron 频率调整：每1h→24, 每2h→12, 每3h→8, 每4h→6, 每6h→4
+      run: |
+          list=$(bash script.sh)
+          arr=$(echo $list | jq -R 'split(" ")')
+          value=$(jq -n --argjson arr "$arr" '{"target": $arr}')
+          echo matrixList=$value >> $GITHUB_OUTPUT
+
+          # GitHub Actions 的 if 条件不支持直接判断数组是否为空，用布尔值传递
+          if [ "$arr" == "[]" ]; then
+            echo matrixEnable=false >> $GITHUB_OUTPUT
+          else
+            echo matrixEnable=true >> $GITHUB_OUTPUT
+          fi
+
+          cat "$GITHUB_OUTPUT"
+
+  sync:
+    needs: setup
+    if: ${{ needs.setup.outputs.matrixEnable == 'true' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      matrix: ${{ fromJson(needs.setup.outputs.matrixList) }}
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+    - name: Validate auth config secret
+      run: |
+        if [ -z "${{ secrets.IMAGESYNC_AUTH_CONFIG }}" ]; then
+          echo "::error::IMAGESYNC_AUTH_CONFIG secret is not configured."
+          echo "Please go to Settings → Secrets and variables → Actions → New repository secret"
+          echo "Name:  IMAGESYNC_AUTH_CONFIG"
+          echo "Value: your auth.yaml content"
+          exit 1
+        fi
+    - name: Write auth config from secret
+      run: echo '${{ secrets.IMAGESYNC_AUTH_CONFIG }}' > ./auth.yaml
+    - name: Sync Images
+      uses: hhyasdf/image-sync-action@v1.1
+      with:
+        auth_file: ./auth.yaml
+        proc: 20
+        images_file: ${{ matrix.target }}

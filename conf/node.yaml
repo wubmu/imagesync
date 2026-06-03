@@ -1,0 +1,3 @@
+# node
+docker.io/node:latest,24,22,20,18,16:
+- registry.cn-guangzhou.aliyuncs.com/ypub/node

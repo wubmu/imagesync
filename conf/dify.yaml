@@ -1,0 +1,71 @@
+docker.io/langgenius/dify-api:0.11.0:
+- registry.cn-guangzhou.aliyuncs.com/ypub/langgenius-dify-api
+
+docker.io/langgenius/dify-web:0.11.0:
+- registry.cn-guangzhou.aliyuncs.com/ypub/langgenius-dify-web
+
+docker.io/postgres:15-alpine:
+- registry.cn-guangzhou.aliyuncs.com/ypub/postgres
+
+docker.io/redis:6-alpine:
+- registry.cn-guangzhou.aliyuncs.com/ypub/redis
+
+docker.io/langgenius/dify-sandbox:0.2.10:
+- registry.cn-guangzhou.aliyuncs.com/ypub/langgenius-dify-sandbox
+
+docker.io/ubuntu/squid:latest:
+- registry.cn-guangzhou.aliyuncs.com/ypub/ubuntu-squid
+
+docker.io/certbot/certbot:latest:
+- registry.cn-guangzhou.aliyuncs.com/ypub/certbot-certbot
+
+docker.io/nginx:latest:
+- registry.cn-guangzhou.aliyuncs.com/ypub/nginx
+
+docker.io/semitechnologies/weaviate:1.19.0:
+- registry.cn-guangzhou.aliyuncs.com/ypub/semitechnologies-weaviate
+
+docker.io/langgenius/qdrant:v1.7.3:
+- registry.cn-guangzhou.aliyuncs.com/ypub/langgenius-qdrant
+
+docker.io/pgvector/pgvector:pg16:
+- registry.cn-guangzhou.aliyuncs.com/ypub/pgvector-pgvector
+
+docker.io/tensorchord/pgvecto-rs:pg16-v0.3.0:
+- registry.cn-guangzhou.aliyuncs.com/ypub/tensorchord-pgvecto-rs
+
+ghcr.io/chroma-core/chroma:0.5.1:
+- registry.cn-guangzhou.aliyuncs.com/ypub/chroma-core-chroma
+
+quay.io/oceanbase/oceanbase-ce:4.3.3.0-100000142024101215:
+- registry.cn-guangzhou.aliyuncs.com/ypub/oceanbase-oceanbase-ce
+
+container-registry.oracle.com/database/free:latest:
+- registry.cn-guangzhou.aliyuncs.com/ypub/container-registry-oracle-com-database-free
+
+quay.io/coreos/etcd:v3.5.5:
+- registry.cn-guangzhou.aliyuncs.com/ypub/quay-io-coreos-etcd
+
+docker.io/minio/minio:RELEASE.2023-03-20T20-16-18Z:
+- registry.cn-guangzhou.aliyuncs.com/ypub/minio-minio
+
+docker.io/milvusdb/milvus:v2.3.1:
+- registry.cn-guangzhou.aliyuncs.com/ypub/milvusdb-milvus
+
+docker.io/opensearchproject/opensearch:latest:
+- registry.cn-guangzhou.aliyuncs.com/ypub/opensearchproject-opensearch
+
+docker.io/opensearchproject/opensearch-dashboards:latest:
+- registry.cn-guangzhou.aliyuncs.com/ypub/opensearchproject-opensearch-dashboards
+
+docker.io/myscale/myscaledb:1.6.4:
+- registry.cn-guangzhou.aliyuncs.com/ypub/myscale-myscaledb
+
+docker.elastic.co/elasticsearch/elasticsearch:8.14.3:
+- registry.cn-guangzhou.aliyuncs.com/ypub/elastic-co-elasticsearch-elasticsearch
+
+docker.elastic.co/kibana/kibana:8.14.3:
+- registry.cn-guangzhou.aliyuncs.com/ypub/elastic-co-kibana-kibana
+
+downloads.unstructured.io/unstructured-io/unstructured-api:latest:
+- registry.cn-guangzhou.aliyuncs.com/ypub/unstructured-io-unstructured-api

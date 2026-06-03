@@ -1,0 +1,7 @@
+# lmenezes/cerebro
+docker.io/lmenezes/cerebro:latest:
+- registry.cn-guangzhou.aliyuncs.com/ypub/lmenezes-cerebro
+
+# kafbat/kafka-ui
+ghcr.io/kafbat/kafka-ui:v1.0.0:
+- registry.cn-guangzhou.aliyuncs.com/ypub/kafbat-kafka-ui

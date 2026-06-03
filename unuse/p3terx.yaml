@@ -1,0 +1,11 @@
+docker.io/p3terx/ariang:
+- registry.cn-guangzhou.aliyuncs.com/ypub/p3terx-ariang
+
+docker.io/p3terx/aria2-pro:
+- registry.cn-guangzhou.aliyuncs.com/ypub/p3terx-aria2-pro
+
+docker.io/superng6/aria2:latest,a2b-latest:
+- registry.cn-guangzhou.aliyuncs.com/ypub/superng6-aria2
+
+docker.io/superng6/aria2:webui-latest:
+- registry.cn-guangzhou.aliyuncs.com/ypub/superng6-aria2-webui

@@ -1,0 +1,5 @@
+docker.io/nginx:mainline,latest,bookworm,perl,alpine,stable:
+- registry.cn-guangzhou.aliyuncs.com/ypub/nginx
+
+docker.io/jc21/nginx-proxy-manager:latest,2:
+- registry.cn-guangzhou.aliyuncs.com/ypub/jc21-nginx-proxy-manager

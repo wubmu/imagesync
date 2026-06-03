@@ -1,0 +1,35 @@
+name: image-mirror-push
+
+on:
+  push:
+    branches:
+    - main
+
+jobs:
+  sync-images:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    strategy:
+      matrix:
+        images_file:
+        - ./conf/redis.yaml
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+    - name: Validate auth config secret
+      run: |
+        if [ -z "${{ secrets.IMAGESYNC_AUTH_CONFIG }}" ]; then
+          echo "::error::IMAGESYNC_AUTH_CONFIG secret is not configured."
+          echo "Please go to Settings → Secrets and variables → Actions → New repository secret"
+          echo "Name:  IMAGESYNC_AUTH_CONFIG"
+          echo "Value: your auth.yaml content"
+          exit 1
+        fi
+    - name: Write auth config from secret
+      run: echo '${{ secrets.IMAGESYNC_AUTH_CONFIG }}' > ./auth.yaml
+    - name: Sync Images
+      uses: hhyasdf/image-sync-action@v1.1
+      with:
+        auth_file: ./auth.yaml
+        proc: 20
+        images_file: ${{ matrix.images_file }}

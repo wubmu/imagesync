@@ -1,0 +1,3 @@
+# docker
+docker.io/docker:latest,dind,27.1.1-dind:
+  - registry.cn-guangzhou.aliyuncs.com/ypub/docker

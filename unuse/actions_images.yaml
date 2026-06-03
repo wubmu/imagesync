@@ -1,0 +1,3 @@
+# docker/setup-qemu-action
+docker.io/tonistiigi/binfmt:latest:
+- registry.cn-guangzhou.aliyuncs.com/ypub/tonistiigi-binfmt

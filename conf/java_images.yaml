@@ -1,0 +1,3 @@
+# amazoncorretto
+docker.io/amazoncorretto:8-alpine-jdk,11-alpine-jdk,17-alpine-jdk:
+- registry.cn-guangzhou.aliyuncs.com/ypub/amazoncorretto

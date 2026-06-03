@@ -1,0 +1,6 @@
+registry.k8s.io/metrics-server/metrics-server:v0.7.2:
+- registry.cn-guangzhou.aliyuncs.com/ypub/metrics-server-metrics-server
+
+# docker pull registry.cn-guangzhou.aliyuncs.com/ypub/metrics-server-metrics-server:v0.7.2;
+# docker tag registry.cn-guangzhou.aliyuncs.com/ypub/metrics-server-metrics-server:v0.7.2 registry.k8s.io/metrics-server/metrics-server:v0.7.2;
+# docker rmi registry.cn-guangzhou.aliyuncs.com/ypub/metrics-server-metrics-server:v0.7.2;

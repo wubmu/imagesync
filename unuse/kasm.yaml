@@ -1,0 +1,5 @@
+docker.io/marktmilligan/kasm:latest:
+- registry.cn-guangzhou.aliyuncs.com/ypub/marktmilligan-kasm
+
+docker.io/kasmweb/core-ubuntu-jammy:
+- registry.cn-guangzhou.aliyuncs.com/ypub/kasmweb-core-ubuntu-jammy

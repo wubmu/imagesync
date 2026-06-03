@@ -1,0 +1,2 @@
+docker.io/traefik:latest,3,v3.6.2:
+- registry.cn-guangzhou.aliyuncs.com/ypub/traefik
