@@ -3,8 +3,8 @@ name: image-mirror-schedule
 
 on:
   schedule:
-  - cron: '15 */3 * * *' # 每3小时运行
-  # - cron: '0 */6 * * *' # 每6小时运行
+  # - cron: '15 */3 * * *' # 每3小时运行
+  - cron: '0 */6 * * *' # 每6小时运行
   # - cron: '15 */4 * * *' # 每4小时运行
 
   workflow_dispatch: # 支持手动触发
@@ -21,7 +21,8 @@ jobs:
     - name: Calculate which config files to process this round
       id: get-matrix
       env:
-        SYNC_MOD: 8  # 取模值，配合 cron 频率调整：每1h→24, 每2h→12, 每3h→8, 每4h→6, 每6h→4
+        SYNC_MOD: 28  # 取模值，公式：周期天数 × 24 ÷ 间隔小时数
+        SYNC_INTERVAL_HOURS: 6  # cron 触发间隔（小时），与 cron 频率保持一致
       run: |
           list=$(bash script.sh)
           arr=$(echo $list | jq -R 'split(" ")')
