@@ -10,7 +10,7 @@ on:
   workflow_dispatch: # 支持手动触发
 
 env:
-  TARGET_REGISTRY: registry.cn-guangzhou.aliyuncs.com/ypub
+  TARGET_REGISTRY: crpi-kkccity66j9w1y3k.cn-hongkong.personal.cr.aliyuncs.com
 
 jobs:
   setup:
