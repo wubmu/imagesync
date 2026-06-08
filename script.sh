@@ -20,12 +20,12 @@ hash_and_mod() {
     local result
 
     hash=$(echo -n "$input" | md5sum | awk '{ print $1 }')
-    decimal=$(echo "ibase=16; $(echo $hash | tr 'a-f' 'A-F')" | bc)
-    result=$((decimal % modulus))
 
-    if [ "$result" -lt 0 ]; then
-        result=$((result + modulus))
-    fi
+    # 两步计算：先 hex→dec，再取模
+    # 不能写成 ibase=16; ... % 28，因为 ibase=16 下 28 会被当成十六进制
+    local decimal
+    decimal=$(echo "ibase=16; $(echo $hash | tr 'a-f' 'A-F')" | bc)
+    result=$(echo "$decimal % $modulus" | bc)
 
     echo "$result"
 }
