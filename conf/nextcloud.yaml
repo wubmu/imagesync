@@ -1,13 +1,13 @@
 
 docker.io/linuxserver/nextcloud:latest:
-- registry.cn-guangzhou.aliyuncs.com/ypub/linuxserver-nextcloud
+- ${TARGET_REGISTRY}/linuxserver-nextcloud
 
 docker.io/nextcloud:latest,stable:
-- registry.cn-guangzhou.aliyuncs.com/ypub/nextcloud
+- ${TARGET_REGISTRY}/nextcloud
 
 
 docker.io/nextcloud/all-in-one:latest:
-- registry.cn-guangzhou.aliyuncs.com/ypub/nextcloud-all-in-one
+- ${TARGET_REGISTRY}/nextcloud-all-in-one
 
 docker.io/nextcloud/aio-domaincheck:latest:
-- registry.cn-guangzhou.aliyuncs.com/ypub/nextcloud-aio-domaincheck
+- ${TARGET_REGISTRY}/nextcloud-aio-domaincheck

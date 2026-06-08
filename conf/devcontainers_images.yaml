@@ -1,11 +1,11 @@
 # mcr.microsoft.com/devcontainers/universal
 mcr.microsoft.com/devcontainers/universal:latest,focal,linux,2,2-linux,2-focal:
-- registry.cn-guangzhou.aliyuncs.com/ypub/devcontainers-universal
+- ${TARGET_REGISTRY}/devcontainers-universal
 
 # mcr.microsoft.com/devcontainers/go
 mcr.microsoft.com/devcontainers/go:latest,1.17,1.18,1.19,1.20,1.21,1.22:
-- registry.cn-guangzhou.aliyuncs.com/ypub/devcontainers-go
+- ${TARGET_REGISTRY}/devcontainers-go
 
 # mcr.microsoft.com/devcontainers/python
 mcr.microsoft.com/devcontainers/python:latest,3.8,3.9,3.10,3.11,3.12:
-- registry.cn-guangzhou.aliyuncs.com/ypub/devcontainers-python
+- ${TARGET_REGISTRY}/devcontainers-python

@@ -1,19 +1,19 @@
 # alpine
 docker.io/alpine:latest,3.14,3.15,3.16:
-  - registry.cn-guangzhou.aliyuncs.com/ypub/alpine
+  - ${TARGET_REGISTRY}/alpine
 
 # python
 docker.io/python:3.10,3.11,3.12,3.13:
-  - registry.cn-guangzhou.aliyuncs.com/ypub/python
+  - ${TARGET_REGISTRY}/python
 
 # postgres
 docker.io/postgres:latest,18,17,16,15,14:
-  - registry.cn-guangzhou.aliyuncs.com/ypub/postgres
+  - ${TARGET_REGISTRY}/postgres
 
 # maridadb
 docker.io/mariadb:latest:
-  - registry.cn-guangzhou.aliyuncs.com/ypub/mariadb
+  - ${TARGET_REGISTRY}/mariadb
 
 # mysql
 docker.io/mysql:latest,8,9:
-  - registry.cn-guangzhou.aliyuncs.com/ypub/mysql
+  - ${TARGET_REGISTRY}/mysql

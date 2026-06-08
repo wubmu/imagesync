@@ -1,5 +1,5 @@
 # authentik
 ghcr.io/goauthentik/server:latest,2026.2,2025.12,2025.10:
-  - registry.cn-guangzhou.aliyuncs.com/ypub/goauthentik-server
+  - ${TARGET_REGISTRY}/goauthentik-server
 ghcr.io/goauthentik/proxy:latest,2026.2,2025.12,2025.10:
-  - registry.cn-guangzhou.aliyuncs.com/ypub/goauthentik-proxy
+  - ${TARGET_REGISTRY}/goauthentik-proxy

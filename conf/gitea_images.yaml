@@ -9,12 +9,12 @@
 
 # gitea
 docker.io/gitea/gitea:latest,1.24,1.23,1.22,1.21: 
-  - registry.cn-guangzhou.aliyuncs.com/ypub/gitea-gitea
+  - ${TARGET_REGISTRY}/gitea-gitea
 
 # gitea/runner-images
 docker.io/gitea/runner-images:ubuntu-22.04,ubuntu-latest,ubuntu-24.04:
-  - registry.cn-guangzhou.aliyuncs.com/ypub/gitea-runner-images
+  - ${TARGET_REGISTRY}/gitea-runner-images
 
 # gitea/act_runner
 docker.io/gitea/act_runner:latest,nightly,0.2.10:
-  - registry.cn-guangzhou.aliyuncs.com/ypub/gitea-act_runner
+  - ${TARGET_REGISTRY}/gitea-act_runner

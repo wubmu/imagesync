@@ -1,5 +1,5 @@
 snowdreamtech/frps:latest,bookworm,debian,alpine:
-- registry.cn-guangzhou.aliyuncs.com/ypub/snowdreamtech_frps
+- ${TARGET_REGISTRY}/snowdreamtech_frps
 
 snowdreamtech/frpc:latest,bookworm,debian,alpine:
-- registry.cn-guangzhou.aliyuncs.com/ypub/snowdreamtech_frpc
+- ${TARGET_REGISTRY}/snowdreamtech_frpc

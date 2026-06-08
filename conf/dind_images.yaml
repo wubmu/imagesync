@@ -1,3 +1,3 @@
 # cruizba/ubuntu-dind
 docker.io/cruizba/ubuntu-dind:latest,noble-latest,focal-latest,jammy-latest:
-- registry.cn-guangzhou.aliyuncs.com/ypub/cruizba-ubuntu-dind
+- ${TARGET_REGISTRY}/cruizba-ubuntu-dind

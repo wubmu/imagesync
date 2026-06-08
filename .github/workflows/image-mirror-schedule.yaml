@@ -9,6 +9,9 @@ on:
 
   workflow_dispatch: # 支持手动触发
 
+env:
+  TARGET_REGISTRY: registry.cn-guangzhou.aliyuncs.com/ypub
+
 jobs:
   setup:
     runs-on: ubuntu-latest
@@ -60,9 +63,11 @@ jobs:
         fi
     - name: Write auth config from secret
       run: echo '${{ secrets.IMAGESYNC_AUTH_CONFIG }}' > ./auth.yaml
+    - name: Substitute target registry
+      run: envsubst < ${{ matrix.target }} > /tmp/sync-target.yaml
     - name: Sync Images
       uses: hhyasdf/image-sync-action@v1.1
       with:
         auth_file: ./auth.yaml
         proc: 20
-        images_file: ${{ matrix.target }}
+        images_file: /tmp/sync-target.yaml

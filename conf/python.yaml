@@ -1,2 +1,2 @@
 python:latest,3.14,3.13,3.14-alpine:
-  - registry.cn-guangzhou.aliyuncs.com/ypub/python
+  - ${TARGET_REGISTRY}/python

@@ -1,5 +1,5 @@
 docker.io/minio/minio:latest:
-- registry.cn-guangzhou.aliyuncs.com/ypub/minio-minio
+- ${TARGET_REGISTRY}/minio-minio
 
 docker.io/minio/mc:latest:
-- registry.cn-guangzhou.aliyuncs.com/ypub/minio-mc
+- ${TARGET_REGISTRY}/minio-mc

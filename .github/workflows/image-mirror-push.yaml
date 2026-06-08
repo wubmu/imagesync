@@ -5,6 +5,9 @@ on:
     branches:
     - main
 
+env:
+  TARGET_REGISTRY: registry.cn-guangzhou.aliyuncs.com/ypub
+
 jobs:
   sync-images:
     runs-on: ubuntu-latest
@@ -27,9 +30,11 @@ jobs:
         fi
     - name: Write auth config from secret
       run: echo '${{ secrets.IMAGESYNC_AUTH_CONFIG }}' > ./auth.yaml
+    - name: Substitute target registry
+      run: envsubst < ${{ matrix.images_file }} > /tmp/sync-target.yaml
     - name: Sync Images
       uses: hhyasdf/image-sync-action@v1.1
       with:
         auth_file: ./auth.yaml
         proc: 20
-        images_file: ${{ matrix.images_file }}
+        images_file: /tmp/sync-target.yaml

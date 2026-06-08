@@ -1,11 +1,11 @@
 # tailscale/tailscale
 docker.io/tailscale/tailscale:latest,stable:
-- registry.cn-guangzhou.aliyuncs.com/ypub/tailscale-tailscale
+- ${TARGET_REGISTRY}/tailscale-tailscale
 
 # headscale-ui
 ghcr.io/gurucomputing/headscale-ui:latest:
-- registry.cn-guangzhou.aliyuncs.com/ypub/gurucomputing-headscale-ui
+- ${TARGET_REGISTRY}/gurucomputing-headscale-ui
 
 # headscale
 ghcr.io/juanfont/headscale:latest,stable,v0.27:
-- registry.cn-guangzhou.aliyuncs.com/ypub/juanfont-headscale
+- ${TARGET_REGISTRY}/juanfont-headscale

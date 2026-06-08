@@ -9,55 +9,55 @@
 
 # memos
 docker.io/neosmemo/memos:stable:
-  - registry.cn-guangzhou.aliyuncs.com/ypub/neosmemo-memos
+  - ${TARGET_REGISTRY}/neosmemo-memos
 
 # ttrss
 docker.io/wangqiru/ttrss:latest-2024-05-02:
-  - registry.cn-guangzhou.aliyuncs.com/ypub/wangqiru-ttrss
+  - ${TARGET_REGISTRY}/wangqiru-ttrss
 
 # bitwarden
 docker.io/vaultwarden/server:latest:
-  - registry.cn-guangzhou.aliyuncs.com/ypub/vaultwarden-server
+  - ${TARGET_REGISTRY}/vaultwarden-server
 
 # alist
 docker.io/xhofe/alist:v3.34.0-ffmpeg:
-  - registry.cn-guangzhou.aliyuncs.com/ypub/xhofe-alist
+  - ${TARGET_REGISTRY}/xhofe-alist
 
 # excalidraw
 docker.io/excalidraw/excalidraw:latest:
-  - registry.cn-guangzhou.aliyuncs.com/ypub/excalidraw-excalidraw
+  - ${TARGET_REGISTRY}/excalidraw-excalidraw
 
 # misskey
 docker.io/misskey/misskey:2024.3:
-  - registry.cn-guangzhou.aliyuncs.com/ypub/misskey-misskey
+  - ${TARGET_REGISTRY}/misskey-misskey
 
 # reference
 docker.io/wcjiang/reference:latest:
-  - registry.cn-guangzhou.aliyuncs.com/ypub/wcjiang-reference
+  - ${TARGET_REGISTRY}/wcjiang-reference
 
 # linux-command
 docker.io/wcjiang/linux-command:latest:
-  - registry.cn-guangzhou.aliyuncs.com/ypub/wcjiang-linux-command
+  - ${TARGET_REGISTRY}/wcjiang-linux-command
 
 # it-tools
 docker.io/corentinth/it-tools:nightly:
-  - registry.cn-guangzhou.aliyuncs.com/ypub/corentinth-it-tools
+  - ${TARGET_REGISTRY}/corentinth-it-tools
 
 # whoami
 docker.io/traefik/whoami:latest:
-  - registry.cn-guangzhou.aliyuncs.com/ypub/traefik-whoami
+  - ${TARGET_REGISTRY}/traefik-whoami
 
 # miniflux
 docker.io/miniflux/miniflux:latest:
-  - registry.cn-guangzhou.aliyuncs.com/ypub/miniflux-miniflux
+  - ${TARGET_REGISTRY}/miniflux-miniflux
 
 # glances
 docker.io/nicolargo/glances:latest-full:
-  - registry.cn-guangzhou.aliyuncs.com/ypub/nicolargo-glances
+  - ${TARGET_REGISTRY}/nicolargo-glances
 
 # syncthing
 docker.io/syncthing/syncthing:latest:
-  - registry.cn-guangzhou.aliyuncs.com/ypub/syncthing-syncthing
+  - ${TARGET_REGISTRY}/syncthing-syncthing
 
 docker.io/wernight/dante:latest:
-  - registry.cn-guangzhou.aliyuncs.com/ypub/wernight-dante
+  - ${TARGET_REGISTRY}/wernight-dante

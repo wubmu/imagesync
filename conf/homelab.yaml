@@ -1,0 +1,65 @@
+# ===== homelab 专属镜像 =====
+# 自动从 /home/ubuntu/homelab 提取，与 compose/ 和 helm charts 保持一致
+
+# --- Elastic Stack ---
+docker.elastic.co/elasticsearch/elasticsearch:8.12.0:
+- ${TARGET_REGISTRY}/elastic-co-elasticsearch-elasticsearch
+
+docker.elastic.co/kibana/kibana:8.12.0:
+- ${TARGET_REGISTRY}/elastic-co-kibana-kibana
+
+# --- Kafka Stack ---
+docker.io/confluentinc/cp-zookeeper:latest:
+- ${TARGET_REGISTRY}/confluentinc-cp-zookeeper
+
+docker.io/confluentinc/cp-kafka:7.3.2:
+- ${TARGET_REGISTRY}/confluentinc-cp-kafka
+
+docker.io/provectuslabs/kafka-ui:latest:
+- ${TARGET_REGISTRY}/provectuslabs-kafka-ui
+
+# --- ClickHouse ---
+docker.io/clickhouse/clickhouse-server:23.3:
+- ${TARGET_REGISTRY}/clickhouse-clickhouse-server
+
+# --- Monitoring ---
+docker.io/prom/prometheus:latest:
+- ${TARGET_REGISTRY}/prom-prometheus
+
+# --- n8n ---
+docker.io/n8nio/n8n:2.0.2:
+- ${TARGET_REGISTRY}/n8nio-n8n
+
+docker.io/n8nio/runners:2.0.2:
+- ${TARGET_REGISTRY}/n8nio-runners
+
+# --- LDAP ---
+docker.io/osixia/openldap:1.5.0:
+- ${TARGET_REGISTRY}/osixia-openldap
+
+docker.io/osixia/phpldapadmin:0.9.0:
+- ${TARGET_REGISTRY}/osixia-phpldapadmin
+
+# --- MailHog ---
+docker.io/mailhog/mailhog:latest:
+- ${TARGET_REGISTRY}/mailhog-mailhog
+
+# --- Code Server ---
+docker.io/codercom/code-server:latest:
+- ${TARGET_REGISTRY}/codercom-code-server
+
+# --- Hermes Agent ---
+docker.io/nousresearch/hermes-agent:latest:
+- ${TARGET_REGISTRY}/nousresearch-hermes-agent
+
+# --- OpenList ---
+docker.io/openlistteam/openlist:latest:
+- ${TARGET_REGISTRY}/openlistteam-openlist
+
+# --- Bitnami PostgreSQL (Helm charts 使用) ---
+docker.io/bitnamilegacy/postgresql:latest:
+- ${TARGET_REGISTRY}/bitnamilegacy-postgresql
+
+# --- Rancher Traefik (k3s 内置 Traefik 使用此镜像) ---
+docker.io/rancher/mirrored-library-traefik:2.11.18:
+- ${TARGET_REGISTRY}/rancher-mirrored-library-traefik

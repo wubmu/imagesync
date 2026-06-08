@@ -1,2 +1,2 @@
 docker.io/driveone/onedrive:latest,debian:
-- registry.cn-guangzhou.aliyuncs.com/ypub/driveone-onedrive
+- ${TARGET_REGISTRY}/driveone-onedrive
