@@ -6,7 +6,7 @@ on:
     - main
 
 env:
-  TARGET_REGISTRY: crpi-kkccity66j9w1y3k.cn-hongkong.personal.cr.aliyuncs.com/code
+  TARGET_REGISTRY: crpi-kkccity66j9w1y3k.cn-hongkong.personal.cr.aliyuncs.com/wubmu
 
 jobs:
   sync-images:
