@@ -63,6 +63,43 @@ jobs:
         fi
     - name: Write auth config from secret
       run: echo '${{ secrets.IMAGESYNC_AUTH_CONFIG }}' > ./auth.yaml
+    - name: Verify registry auth
+      run: |
+        echo "=== auth.yaml 结构（密码已隐藏）==="
+        sed 's/\(password:\s*\).*/\1****/' ./auth.yaml
+        echo ""
+        echo "=== 测试 registry 认证 ==="
+        python3 -c "
+        import yaml, subprocess, sys
+        with open('./auth.yaml') as f:
+            auth = yaml.safe_load(f)
+        if not auth:
+            print('ERROR: auth.yaml 为空或格式错误')
+            sys.exit(1)
+        failed = []
+        for registry, creds in auth.items():
+            user = creds.get('username', '')
+            pwd = creds.get('password', '')
+            if not user or not pwd:
+                print(f'WARN: {registry} 缺少 username 或 password')
+                failed.append(registry)
+                continue
+            r = subprocess.run(
+                ['docker', 'login', '--username', user, '--password-stdin', registry],
+                input=pwd, capture_output=True, text=True
+            )
+            if r.returncode == 0:
+                print(f'OK:   {registry} 认证成功')
+            else:
+                print(f'FAIL: {registry} 认证失败')
+                print(f'      stderr: {r.stderr.strip()}')
+                failed.append(registry)
+        if failed:
+            print(f'\n错误: {len(failed)} 个 registry 认证失败')
+            sys.exit(1)
+        else:
+            print('\n所有 registry 认证通过')
+        " 2>&1
     - name: Substitute target registry
       run: envsubst < ${{ matrix.target }} > /tmp/sync-target.yaml
     - name: Sync Images
