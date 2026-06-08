@@ -9,36 +9,28 @@
 │                        imagesync 工作流程                            │
 ├─────────────────────────────────────────────────────────────────────┤
 │                                                                     │
-│  触发方式（二选一）                                                   │
-│  ┌──────────────────────┐    ┌──────────────────────┐               │
-│  │  cron 定时触发        │    │  push 到 main 分支    │               │
-│  │  每3小时自动运行      │    │  紧急同步时手动推送    │               │
-│  └──────────┬───────────┘    └──────────┬───────────┘               │
-│             │                           │                           │
-│             ▼                           ▼                           │
-│  ┌──────────────────────┐    ┌──────────────────────┐               │
-│  │  script.sh            │    │  直接指定配置文件     │               │
-│  │  哈希取模选出本轮文件  │    │  (如 conf/redis.yaml) │               │
-│  └──────────┬───────────┘    └──────────┬───────────┘               │
-│             │                           │                           │
-│             ▼                           ▼                           │
+│  触发方式（三选一）                                                   │
+│  ┌──────────────────┐  ┌──────────────────┐  ┌──────────────────┐   │
+│  │  cron 定时触发    │  │  push 到 main    │  │  workflow_dispatch│  │
+│  │  每6小时自动运行  │  │  紧急同步时推送    │  │  Actions 页面手动  │  │
+│  └────────┬─────────┘  └────────┬─────────┘  └────────┬─────────┘   │
+│           │                     │                     │             │
+│           ▼                     ▼                     ▼             │
+│  ┌──────────────────┐  ┌──────────────────┐                         │
+│  │  script.sh        │  │  指定配置文件     │                         │
+│  │  哈希取模选出本轮  │  │  (matrix 列表)   │                         │
+│  └────────┬─────────┘  └────────┬─────────┘                         │
+│           │                     │                                   │
+│           ▼                     ▼                                   │
 │  ┌──────────────────────────────────────────────────────┐           │
-│  │              GitHub Actions 并行执行                   │           │
-│  │  ┌─────────┐  ┌─────────┐  ┌─────────┐              │           │
-│  │  │conf/a   │  │conf/b   │  │conf/c   │  ...         │           │
-│  │  └────┬────┘  └────┬────┘  └────┬────┘              │           │
-│  └───────┼─────────────┼─────────────┼──────────────────┘           │
-│          │             │             │                              │
-│          ▼             ▼             ▼                              │
+│  │  envsubst 替换 ${TARGET_REGISTRY} → 实际仓库地址      │           │
+│  └──────────────────────────┬───────────────────────────┘           │
+│                             │                                       │
+│                             ▼                                       │
 │  ┌──────────────────────────────────────────────────────┐           │
-│  │  从 IMAGESYNC_AUTH_CONFIG Secret 读取仓库认证信息      │           │
-│  │              逐个拉取源镜像 → 推送到目标仓库             │           │
+│  │  image-sync-action 并行同步                           │           │
+│  │  从源拉取 → 推送到目标仓库（proc: 20 并发）             │           │
 │  └──────────────────────────────────────────────────────┘           │
-│          │             │             │                              │
-│          ▼             ▼             ▼                              │
-│  ┌──────────┐  ┌──────────┐  ┌──────────┐                         │
-│  │阿里云 ACR │  │腾讯云 TCR │  │  ...     │                         │
-│  └──────────┘  └──────────┘  └──────────┘                         │
 │                                                                     │
 │  最终效果：                                                          │
 │  docker pull registry.cn-guangzhou.aliyuncs.com/ypub/nginx         │
@@ -47,27 +39,51 @@
 └─────────────────────────────────────────────────────────────────────┘
 ```
 
-- **定时调度**：通过哈希取模将 `conf/` 下的文件分散到不同轮次，避免一次性处理全部镜像导致超时。支持 1~7 天的调度周期
+- **定时调度**：通过 MD5 哈希取模将 `conf/` 下的文件分散到不同轮次，避免一次性处理全部镜像导致超时。支持 1~7 天的调度周期
 - **推送触发**：push 到 main 分支时同步指定配置文件，适合紧急更新
+- **手动触发**：Actions 页面 → `image-mirror-schedule` → Run workflow
 - **认证安全**：凭据通过 GitHub Secret 管理，不提交到代码中
+- **地址参数化**：目标 registry 通过 `TARGET_REGISTRY` 环境变量统一管理，fork 后改一处即可
 
 ## 项目结构
 
 ```
+.
 ├── .github/workflows/
 │   ├── image-mirror-schedule.yaml   # 定时同步（cron + 手动触发）
 │   └── image-mirror-push.yaml       # push 到 main 时同步
 ├── conf/                            # 镜像配置文件（按分类）
-├── auth.yaml                        # 认证信息（⚠️ 不提交，通过 Secret 管理）
+│   ├── nginx.yaml                   # 每个文件对应一组镜像
+│   ├── redis.yaml
+│   ├── homelab.yaml                 # homelab 专属镜像
+│   └── ...
+├── unuse/                           # 冷备归档（不参与同步，需要时移回 conf/）
 ├── script.sh                        # 哈希取模调度脚本
 └── Makefile                         # 快捷命令
 ```
 
 ## 快速开始
 
-### 1. 配置认证信息
+### 1. Fork 并启用 Actions
 
-首先，在目标镜像仓库中创建命名空间，获取用户名和密码：
+1. Fork 本仓库到你自己的 GitHub 账号
+2. 进入你 Fork 的仓库，打开 **Actions** 页面
+3. 点击 **"I understand my workflows, go ahead and enable them"** 启用工作流（GitHub 默认会禁用 Fork 仓库的定时任务）
+
+### 2. 修改目标 Registry 地址
+
+编辑 `.github/workflows/image-mirror-schedule.yaml` 和 `image-mirror-push.yaml`，修改顶部的 `TARGET_REGISTRY`：
+
+```yaml
+env:
+  TARGET_REGISTRY: registry.cn-guangzhou.aliyuncs.com/your-namespace
+```
+
+> 只需改这一个值，所有 `conf/*.yaml` 中的目标地址会自动使用这个前缀，无需逐个修改配置文件。
+
+### 3. 配置镜像仓库认证
+
+在目标镜像仓库中创建命名空间，获取用户名和密码：
 
 - **阿里云 ACR**：https://cr.console.aliyun.com/cn-guangzhou/instances
 - **腾讯云 TCR**：https://console.cloud.tencent.com/tcr
@@ -76,149 +92,149 @@
 
 1. 打开仓库 **Settings → Secrets and variables → Actions**
 2. 点击 **New repository secret**
-3. Name 填：`IMAGESYNC_AUTH_CONFIG`
-4. Value 填 `auth.yaml` 的有效内容（去掉注释），格式如下：
+3. **Name** 填：`IMAGESYNC_AUTH_CONFIG`
+4. **Value** 填以下格式的 YAML：
 
 ```yaml
-ccr.ccs.tencentyun.com:
+registry.cn-guangzhou.aliyuncs.com:
   username: 你的用户名
   password: 你的密码
 
-registry.cn-guangzhou.aliyuncs.com:
+ccr.ccs.tencentyun.com:
   username: 你的用户名
   password: 你的密码
 ```
 
 5. 点击 **Add secret** 保存
 
-### 2. 添加镜像配置
+> ⚠️ **Secret Name 必须是 `IMAGESYNC_AUTH_CONFIG`**，工作流依赖此名称。未配置会导致工作流失败。
 
-在 `conf/` 目录下添加 yaml 文件：
+### 4. 添加/修改镜像配置
+
+在 `conf/` 目录下添加或修改 yaml 文件：
 
 ```yaml
-# 格式：源镜像地址:tag1,tag2,tag3:
-#   缩进 - 目标镜像地址
+# 格式：源镜像地址:tag1,tag2:
+#   缩进 - ${TARGET_REGISTRY}/镜像名
 
 # 同步多个 tag
 docker.io/nginx:latest,stable,alpine:
-- registry.cn-guangzhou.aliyuncs.com/your-ns/nginx
+- ${TARGET_REGISTRY}/nginx
 
 # 同步特定版本
 docker.io/postgres:16-alpine:
-- registry.cn-guangzhou.aliyuncs.com/your-ns/postgres
+- ${TARGET_REGISTRY}/postgres
 
 # 同步到多个目标仓库
 docker.io/redis:latest,7:
-- registry.cn-guangzhou.aliyuncs.com/your-ns/redis
+- ${TARGET_REGISTRY}/redis
 - ccr.ccs.tencentyun.com/your-ns/redis
 ```
 
-### 3. 调整调度频率
+> 目标地址使用 `${TARGET_REGISTRY}` 占位符，运行时会自动替换为 workflow 中配置的实际值。
 
-编辑 `.github/workflows/image-mirror-schedule.yaml`，修改 **三个地方**：
+### 5. （可选）调整调度频率
+
+编辑 `.github/workflows/image-mirror-schedule.yaml` 中的 cron 和调度参数：
 
 ```yaml
 schedule:
-- cron: '15 */3 * * *'     # ① cron 触发间隔
+- cron: '0 */6 * * *'       # cron 触发间隔
 
 env:
-  SYNC_MOD: 8              # ② 取模值 = 周期天数 × 24 ÷ 间隔小时数
-  SYNC_INTERVAL_HOURS: 3   # ③ 与 cron 间隔保持一致（小时）
+  TARGET_REGISTRY: registry.cn-guangzhou.aliyuncs.com/ypub
+  SYNC_MOD: 28              # 取模值 = 周期天数 × 24 ÷ 间隔小时数
+  SYNC_INTERVAL_HOURS: 6    # 与 cron 间隔保持一致（小时）
 ```
 
-- **cron 表达式**：控制触发间隔（如 `*/6` = 每 6 小时），cron 本身不感知"周期"
-- **SYNC_INTERVAL_HOURS**：告诉脚本触发频率，用于计算调度轮次
-- **SYNC_MOD**：控制周期长度，每个 SYNC_MOD 轮次后所有配置恰好被处理一遍
+| 周期 | cron 频率 | SYNC_INTERVAL_HOURS | SYNC_MOD |
+| ---- | --------- | ------------------- | -------- |
+| 1 天 | 每 3h     | 3                   | 8        |
+| 1 天 | 每 6h     | 6                   | 4        |
+| 3 天 | 每 6h     | 6                   | 12       |
+| 7 天 | 每 6h     | 6                   | 28       |
+| 7 天 | 每 8h     | 8                   | 21       |
 
-#### 常用配置对照表
+每个 `conf/*.yaml` 文件通过 MD5 哈希被分配到某个 bucket，经过 SYNC_MOD 轮次后所有文件恰好被处理一次。
 
-| 周期 | cron 频率 | SYNC_INTERVAL_HOURS | SYNC_MOD | 每周期总轮次 |
-| ---- | --------- | ------------------- | -------- | ------------ |
-| 1 天 | 每 1h     | 1                   | 24       | 24           |
-| 1 天 | 每 2h     | 2                   | 12       | 12           |
-| 1 天 | 每 3h     | 3                   | 8        | 8            |
-| 1 天 | 每 4h     | 4                   | 6        | 6            |
-| 1 天 | 每 6h     | 6                   | 4        | 4            |
-| 2 天 | 每 6h     | 6                   | 8        | 8            |
-| 3 天 | 每 4h     | 4                   | 18       | 18           |
-| 3 天 | 每 6h     | 6                   | 12       | 12           |
-| 3 天 | 每 8h     | 8                   | 9        | 9            |
-| 7 天 | 每 6h     | 6                   | 28       | 28           |
-| 7 天 | 每 8h     | 8                   | 21       | 21           |
-| 7 天 | 每 12h    | 12                  | 14       | 14           |
-
-#### 配置示例
-
-```yaml
-# 示例：3 天周期，每 6 小时调度一次（每周期 12 轮，每轮处理不同文件）
-schedule:
-- cron: '15 */6 * * *'       # ← 改这里：触发间隔
-
-env:
-  SYNC_MOD: 12               # ← 改这里：3×24÷6 = 12
-  SYNC_INTERVAL_HOURS: 6     # ← 改这里：与 cron 间隔一致
-```
-
-```yaml
-# 示例：7 天周期，每 8 小时调度一次（每周期 21 轮）
-schedule:
-- cron: '15 */8 * * *'
-
-env:
-  SYNC_MOD: 21               # 7×24÷8 = 21
-  SYNC_INTERVAL_HOURS: 8
-```
-
-#### 工作原理
-
-每个 `conf/*.yaml` 文件通过 MD5 哈希被分配到 `0 ~ SYNC_MOD-1` 的某个 bucket。每轮调度处理一个 bucket 的文件，经过 SYNC_MOD 轮次后所有文件恰好被处理一次，然后开始新周期。
-
-### 4. 提交并等待
+### 6. 提交并运行
 
 ```bash
 make    # git add . && git commit -m "update" && git push
 ```
 
-## 给朋友：如何使用这个项目
+推送后 Actions 自动运行。也可以在 Actions 页面手动触发 `image-mirror-schedule` → Run workflow 立即测试。
 
-```
-┌─────────────────────────────────────────────────────┐
-│                    使用流程                           │
-│                                                     │
-│  1. Fork 本仓库到你的 GitHub 账号                     │
-│     │                                               │
-│     ▼                                               │
-│  2. 启用 Actions（GitHub 默认禁用 Fork 的定时任务）   │
-│     进入 Actions 页面，点击启用按钮                    │
-│     │                                               │
-│     ▼                                               │
-│  3. 设置 Secret                                      │
-│     Settings → Secrets → New secret                 │
-│     Name:  IMAGESYNC_AUTH_CONFIG                    │
-│     Value: 你的镜像仓库认证 yaml                      │
-│     │                                               │
-│     ▼                                               │
-│  4. 修改 conf/ 配置                                  │
-│     把目标地址换成你的命名空间                         │
-│     如 ypub → your-ns                               │
-│     │                                               │
-│     ▼                                               │
-│  5. 推送代码                                         │
-│     git push                                        │
-│     │                                               │
-│     ▼                                               │
-│  6. Actions 自动运行，镜像同步完成                    │
-│     docker pull 你的仓库地址/nginx:latest            │
-│                                                     │
-└─────────────────────────────────────────────────────┘
+## 如何运行
+
+### 自动运行
+
+推送代码到 main 分支后，GitHub Actions 自动按 cron 表达式定时执行。当前配置：**每 6 小时一次，7 天为一个完整周期**。
+
+### 手动触发
+
+1. 进入 GitHub 仓库的 **Actions** 页面
+2. 左侧选择 **image-mirror-schedule**
+3. 点击 **Run workflow** → 绿色 **Run workflow** 按钮
+4. 等待 job 完成（约 5-15 分钟）
+
+### 手动指定文件同步（紧急更新）
+
+1. 编辑 `.github/workflows/image-mirror-push.yaml`，修改 `matrix.images_file` 列表：
+
+```yaml
+strategy:
+  matrix:
+    images_file:
+    - ./conf/redis.yaml
+    - ./conf/nginx.yaml    # 添加你要同步的文件
 ```
 
-1. **Fork 本仓库**到你自己的 GitHub 账号
-2. 在你 Fork 的仓库中，进入 **Actions** 页面，点击 **"I understand my workflows, go ahead and enable them"** 启用工作流（GitHub 默认会禁用 Fork 仓库的定时任务）
-3. 在 Fork 的仓库中设置 `IMAGESYNC_AUTH_CONFIG` Secret（填你自己的镜像仓库认证），**未配置 Secret 会导致工作流失败**
-4. 修改 `conf/` 下的配置文件，把目标仓库地址换成你自己的命名空间
-5. 按需调整 cron 频率和 mod 值
-6. 推送后 Actions 自动运行
+2. 提交并推送到 main 分支，触发 `image-mirror-push` 工作流
+
+### 冷备归档
+
+`unuse/` 目录存放暂时不用的镜像配置，不会参与同步。需要恢复时直接移回 `conf/`：
+
+```bash
+mv unuse/alist.yaml conf/
+```
+
+## 镜像配置文件列表
+
+| 文件 | 内容 |
+|------|------|
+| alpine.yaml | Alpine Linux |
+| ubuntu.yaml | Ubuntu |
+| debian.yaml | Debian |
+| golang.yaml | Go |
+| node.yaml | Node.js |
+| python.yaml | Python |
+| java_images.yaml | Amazon Corretto JDK |
+| redis.yaml | Redis + RedisInsight |
+| mongo.yaml | MongoDB |
+| official_images.yaml | PostgreSQL, MySQL, MariaDB |
+| nginx.yaml | Nginx + Nginx Proxy Manager |
+| traefik.yaml | Traefik |
+| frp.yaml | FRP 内网穿透 |
+| certbot.yaml | Certbot |
+| docker_images.yaml | Docker + DinD |
+| dind_images.yaml | Ubuntu DinD |
+| ghcr_images.yaml | Immich, Homepage, Coder |
+| grafana.yaml | Grafana |
+| headscale.yaml | Tailscale, Headscale |
+| authentik.yaml | Authentik |
+| gitea_images.yaml | Gitea + Runner |
+| minio.yaml | MinIO |
+| nextcloud.yaml | Nextcloud |
+| onedrive.yaml | OneDrive |
+| rsshub.yaml | RSSHub |
+| wewerss.yaml | WeWe RSS |
+| cerebro.yaml | Cerebro, Kafka UI |
+| other_images.yaml | Vaultwarden, Memos, Alist, Syncthing 等 |
+| k3s.yaml | K3s 相关镜像 |
+| devcontainers_images.yaml | VS Code Dev Containers |
+| homelab.yaml | Homelab 专属（ES, Kafka, ClickHouse, n8n 等） |
 
 ## 依赖
 
