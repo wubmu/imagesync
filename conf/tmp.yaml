@@ -1,5 +1,0 @@
-# plndr/kube-vip:v0.4.0:
-#   - registry.cn-guangzhou.aliyuncs.com/ypub/plndr-kube-vip
-
-pivotalrabbitmq/perf-test:latest:
-  - registry.cn-guangzhou.aliyuncs.com/ypub/pivotalrabbitmq-perf-test
